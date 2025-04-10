@@ -5,6 +5,7 @@ from . import models
 from .models import Details
 from .models import Compose
 import imaplib,email
+import speech_recognition as sr
 from gtts import gTTS
 import os
 from playsound import playsound
@@ -18,6 +19,10 @@ from email import encoders
 from django.http import JsonResponse
 import re
 from django.conf import settings
+
+import asyncio
+import edge_tts
+
 file = "good"
 i="0"
 passwrd = ""
@@ -32,19 +37,36 @@ imap_url = 'imap.gmail.com'
 conn = imaplib.IMAP4_SSL(imap_url)
 attachment_dir = os.path.join(settings.BASE_DIR, "homepage", "attachments")
 
-def texttospeech(text, filename):
-    filename = filename + '.mp3'
-    flag = True
-    while flag:
-        try:
-            tts = gTTS(text=text, lang='en', slow=False)
-            tts.save(filename)
-            flag = False
-        except:
-            print('Trying again')
+# def texttospeech(text, filename):
+#     filename = filename + '.mp3'
+#     flag = True
+#     while flag:
+#         try:
+#             tts = gTTS(text=text, lang='en', slow=False)
+#             tts.save(filename)
+#             flag = False
+#         except:
+#             print('Trying again')
+#     playsound(filename)
+#     os.remove(filename)
+#     return
+
+
+async def edge_text_to_speech(text, filename="output.mp3"):
+    communicate = edge_tts.Communicate(text, voice="en-US-AriaNeural")
+    await communicate.save(filename)
     playsound(filename)
     os.remove(filename)
-    return
+
+def smooth_text(text):
+    # Be careful: only do this where it doesn't ruin meaning
+    text = text.replace('. ', ', ')
+    return text
+
+# To call from a sync function:
+def texttospeech(text, filename="voice"):
+    text = smooth_text(text)
+    asyncio.run(edge_text_to_speech(text, filename + ".mp3"))
 
 def speechtotext(duration):
     global i, addr, passwrd
@@ -96,8 +118,8 @@ def login_view(request):
     global i, addr, passwrd 
 
     if request.method == 'POST':
-        text1 = "Welcome to Drisht-E, your very own Voice based Email service. Login with your email account in order to continue. "
-        # texttospeech(text1, file + i)
+        text1 = "Welcome to Hear to see, your very own Voice based Email service. Login with your email account in order to continue. "
+        texttospeech(text1, file + i)
         i = i + str(1)
 
         flag = True
@@ -108,17 +130,20 @@ def login_view(request):
             # addr = addr.replace(' ', '')
             # addr = addr.replace('attherate', '@')
             if addr != 'N':
-                texttospeech("You meant " + addr + " say yes to confirm or no to enter again", file + i)
+                texttospeech("You meant " + addr + " say proceed to confirm or retry to enter again ", file + i)
                 i = i + str(1)
-                say="yes"
+                # say="correct"
                 say = speechtotext(5)
+                print(say)
                 say=say.replace(' ','')
-                flag = False
+                # flag = False
                 # if say == 'yes' or say == 'Yes':
-                if("no" in say.lower()):
+                if("retry" in say.lower() or say == 'N'):
                     print(say.lower())
                     print("User confirmation captured as:", addr)
                     flag = True
+                elif("proceed" in say.lower()):
+                    flag=False
             else:
                 texttospeech("could not understand what you meant:", file + i)
                 i = i + str(1)
@@ -136,16 +161,21 @@ def login_view(request):
             passwrd = speechtotext(12)
             
             if addr != 'N':
-                texttospeech("You meant " + passwrd + " say yes to confirm or no to enter again", file + i)
+                texttospeech("You meant " + passwrd + " say proceed to confirm or retry to enter again", file + i)
                 i = i + str(1)
-                say="yes"
-                flag = False
+                # say="correct"
+                # flag = False
                 say = speechtotext(3)
+                print(say)
                 say = say.replace(" ", "")
-                if(say.lower() == 'no'):
+                if('retry' in say.lower() or say == 'N'):
                     say = speechtotext(3)
                     print("User confirmation captured as:", say)
                     flag = True
+                elif('proceed' in say.lower()):
+                    flag = False
+                
+                     
                 
             else:
                 texttospeech("could not understand what you meant:", file + i)
@@ -157,13 +187,13 @@ def login_view(request):
         print(passwrd)
 
         imap_url = 'imap.gmail.com'
-        # passwrd = ''
-        # addr = ''
+        # passwrd = 'fzsyyzmskthalsvn'
+        # addr = 'hackmol600@gmail.com'
         conn = imaplib.IMAP4_SSL(imap_url)
         try:
             conn.login(addr, passwrd)
             s.login(addr, passwrd)
-            texttospeech("Congratulations. You have logged in successfully. You will now be redirected to the menu page.", file + i)
+            texttospeech("You have logged in successfully.", file + i)
             i = i + str(1)
             return JsonResponse({'result' : 'success'})
         except:
@@ -183,17 +213,19 @@ def options_view(request):
         flag = True
         texttospeech("You are logged into your account. How would you like to proceed ?", file + i)
         i = i + str(1)
-        while(flag):
-            texttospeech("To compose an email say compose. To open Inbox folder say Inbox. To Logout say Logout. Do you want me to repeat?", file + i)
-            i = i + str(1)
-            say=""
-            say = speechtotext(3)
-            if say == 'No' or say == 'no':
-                flag = False
+        # while(flag):
+        texttospeech("To compose an email say compose. To open Inbox folder say Inbox. To Logout say Logout.", file + i)
+        i = i + str(1)
+            # say=""
+            # say = speechtotext(3)
+            # print(say)
+            # if 'no' in say.lower():
+            #     flag = False
         texttospeech("Enter your desired action", file + i)
         i = i + str(1)
         act = speechtotext(5)
         act = act.lower()
+        act= act.replace(' ','')
         if act == 'compose':
             return JsonResponse({'result' : 'compose'})
         elif act == 'inbox':
@@ -202,7 +234,7 @@ def options_view(request):
             return JsonResponse({'result' : 'sent'})
         elif act == 'trash':
             return JsonResponse({'result' : 'trash'})
-        elif act == 'log out':
+        elif 'logout' in act:
             addr = ""
             passwrd = ""
             texttospeech("You have been logged out of your account and now will be redirected back to the login page.",file + i)
@@ -233,23 +265,28 @@ def compose_view(request):
                 to = speechtotext(15)
                 if to != 'N':
                     
-                    texttospeech("You meant " + to + " say yes to confirm or no to enter again", file + i)
+                    texttospeech("You meant " + to + " say proceed to confirm or retry to enter again", file + i)
                     i = i + str(1)
-                    say="yes"
-                    flag = False
+                    # say="confirm"
+                    # flag = False
                     toaddr.append(to)
                     say = speechtotext(5)
-                    if say.lower()=="no":
+                    if "retry" in say.lower():
                         toaddr.remove(to)
                         flag = True
+                    elif("proceed" in say.lower()):
+                        flag=False
                 else:
                     texttospeech("could not understand what you meant", file + i)
                     i = i + str(1)
-            texttospeech("Do you want to enter more recipients ?  Say yes or no.", file + i)
+            texttospeech("Do you want to enter more recipients ?  if yes say add else say proceed.", file + i)
             i = i + str(1)
-            say1 = speechtotext(3)
-            if say1 == 'No' or say1 == 'no':
+            say1 = speechtotext(5)
+            say1 = say1.replace(" ","")
+            if "proceed" in say1.lower():
                 flag1 = False
+            elif "add" in say1.lower():
+                flag1 = True
             flag = True
 
         newtoaddr = list()
@@ -268,7 +305,7 @@ def compose_view(request):
         while (flag):
             texttospeech("enter subject", file + i)
             i = i + str(1)
-            subject = speechtotext(10)
+            subject = speechtotext(20)
             if subject == 'N':
                 texttospeech("could not understand what you meant", file + i)
                 i = i + str(1)
@@ -279,7 +316,7 @@ def compose_view(request):
         while flag:
             texttospeech("enter body of the mail", file + i)
             i = i + str(1)
-            body = speechtotext(20)
+            body = speechtotext(30)
             if body == 'N':
                 texttospeech("could not understand what you meant", file + i)
                 i = i + str(1)
@@ -287,16 +324,39 @@ def compose_view(request):
                 flag = False
 
         msg.attach(MIMEText(body, 'plain'))
-        texttospeech("any attachment? say yes or no", file + i)
+        texttospeech("any attachment? say attach to include or skip to continue", file + i)
         i = i + str(1)
-        x = speechtotext(3)
+        x = speechtotext(5)
         x = x.lower()
-        if x == 'yes':
-            texttospeech("Do you want to record an audio and send as an attachment?", file + i)
+        x = x.replace(" ","")
+        if 'skip' in x:
+            print(x)
+        else:
+            texttospeech("Do you want to record an audio or send an attachment? say audio or attachment", file + i)
             i = i + str(1)
             say = speechtotext(2)
             say = say.lower()
-            if say == 'yes':
+            say = say.replace(" ","")
+            print(say)
+            if 'attachment' in say:
+                texttospeech("Enter filename with extension", file + i)
+                i = i + str(1)
+                # filename = speechtotext(5)
+                filename = "photo.png"
+                filename = filename.strip()
+                filename = filename.replace(' ', '')
+                filename = filename.lower()
+                filename = convert_special_char(filename)
+                
+                attachment = open(filename, "rb")
+                p = MIMEBase('application', 'octet-stream')
+                p.set_payload((attachment).read())
+                encoders.encode_base64(p)
+                p.add_header('Content-Disposition', "attachment; filename= %s" % filename)
+                msg.attach(p)
+
+                
+            elif 'audio' in say:
                 texttospeech("Enter filename.", file + i)
                 i = i + str(1)
                 filename = speechtotext(5)
@@ -306,7 +366,7 @@ def compose_view(request):
                 print(filename)
                 texttospeech("Enter your audio message.", file + i)
                 i = i + str(1)
-                audio_msg = speechtotext(10)
+                audio_msg = speechtotext(20)
                 flagconf = True
                 while flagconf:
                     try:
@@ -321,26 +381,15 @@ def compose_view(request):
                 encoders.encode_base64(p)
                 p.add_header('Content-Disposition', "attachment; filename= %s" % filename)
                 msg.attach(p)
-            elif say == 'no':
-                texttospeech("Enter filename with extension", file + i)
-                i = i + str(1)
-                filename = speechtotext(5)
-                filename = filename.strip()
-                filename = filename.replace(' ', '')
-                filename = filename.lower()
-                filename = convert_special_char(filename)
+           
                 
-                attachment = open(filename, "rb")
-                p = MIMEBase('application', 'octet-stream')
-                p.set_payload((attachment).read())
-                encoders.encode_base64(p)
-                p.add_header('Content-Disposition', "attachment; filename= %s" % filename)
-                msg.attach(p)
         try:
             s.sendmail(fromaddr, newtoaddr, msg.as_string())
             texttospeech("Your email has been sent successfully. You will now be redirected to the menu page.", file + i)
             i = i + str(1)
-        except:
+        except Exception as e:
+            print("An error occurred:", e)
+            
             texttospeech("Sorry, your email failed to send. please try again. You will now be redirected to the the compose page again.", file + i)
             i = i + str(1)
             return JsonResponse({'result': 'failure'})
@@ -520,7 +569,7 @@ def inbox_view(request):
                     i = i + str(1)
                     yn = speechtotext(5)
                     yn = yn.lower()
-                    if yn == 'yes':
+                    if not('no' in yn):
                         break
                 emailid = emailid.strip()
                 emailid = emailid.replace(' ', '')
