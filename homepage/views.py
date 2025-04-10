@@ -187,7 +187,7 @@ def login_view(request):
         print(passwrd)
 
         imap_url = 'imap.gmail.com'
-        # passwrd = 'fzsyyzmskthalsvn'
+        passwrd = 'fzsyyzmskthalsvn'
         # addr = 'hackmol600@gmail.com'
         conn = imaplib.IMAP4_SSL(imap_url)
         try:
