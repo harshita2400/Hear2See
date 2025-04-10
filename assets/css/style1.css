@@ -74,7 +74,7 @@ input[type="submit"]  {
 
 input[type="submit"] :hover,
 input[type="submit"] :focus {
-  background-color: #F082AC;
+  background-color: #a6cef1;
   transition:all 0.5s ease-in-out
 }
 input[type="submit"] {
