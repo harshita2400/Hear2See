@@ -2,19 +2,88 @@
 <!DOCTYPE html>
 <html>
 	<head>
+
 		<style>
-  body {
-    margin: 0;
-    padding: 0;
-    background-color: #8d9eff;
-  }
+/* Full page background */
+/* Center everything */
+.masthead-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+   /* full height minus top and bottom */
+  padding-top: 30px; /* moves WELCOME text slightly down */
+}
+
+/* Title */
+.masthead-content h1 {
+  font-size: 60px;
+  font-weight: 700;
+  color: black;
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+/* Form container */
+.login {
+  background-color: transparent;
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Labels */
+.login h3 {
+  color: black;
+  font-size: 18px;
+  width: 100%;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+/* Input fields */
+.login input[type="text"],
+.login input[type="password"] {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 25px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* Login Button */
+.login button[type="submit"] {
+  background-color: #0b0c1d;
+  color: white;
+  padding: 12px 30px;
+  font-weight: bold;
+  font-size: 14px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: background-color 0.3s ease;
+}
+
+.login button[type="submit"]:hover {
+  background-color: #1c1c3c;
+}
+
+
 </style>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
 		<link rel="icon" type="image/png" href="{% static 'Images/icon.png' %}">
-		<title>HEAR2SEE</title>
+		<title>DRISHT-E</title>
 
-		<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+		<!-- <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}"> -->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900">
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i">
 		<link rel="stylesheet" href="{% static 'css/style.css' %}">
@@ -22,8 +91,9 @@
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<script src="{% static 'js/jquery.min.js' %}"></script>
-    	<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    	<!-- <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>/ -->
 		
+
 
 		</head>
 

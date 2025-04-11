@@ -1,73 +1,65 @@
 {% extends 'base_layout.html' %} {% block content %}
-<body
+<body style="margin:0; background-color: #f8f9fa"
   onmousedown="SendPostRequestHome(event)"
-  style="background-color: #a6cef1"
+ 
 >
+
   <nav
     class="navbar navbar-dark navbar-expand-lg fixed-top bg-dark navbar-custom"
   >
-    <div class="container">
-      <a class="navbar-brand" style="font-size: 150% ; color: 0a4b83; font-family: Bebas Neue" ><bold>Hear2See</bold></a>
-    </div>
+  <div class="top-bar" style="width: 100%;height: 80px;background-color: #343a40;color:white; display:flex;justify-content: center;align-items: center;font-size: 30px;">
+    <span class="brand-name">HEAR2SEE</span>
+  </div>
   </nav>
   <header class="masthead text-center text-white">
-    <div class="masthead-content">
-      <div class="container">
-        <h1 style="margin-top: -60px; font-size: 60px; color: black">
-          WELCOME
-        </h1>
-
-        <form action="homepage/login.html" method="POST">
-          <br /><br /><br /><br />
-          <div class="container">
-            <div class="login" id="here">
-              <script>
-                $(document).ready(function () {
-                  setInterval(function () {
-                    $("#here").load(window.location.href + " #here");
-                  }, 1000);
-                });
-              </script>
-
-              {% csrf_token %}
-              <h3 style="color: black; text-align: left; margin-left: 10%">
-                Email:
-              </h3>
-
-              <input
-                type="text"
-                placeholder="Email"
-                name="email"
-                required
-                value="{{ detail.email }}"
-              />
-
-              <br /><br />
-              <h3 style="color: black; text-align: left; margin-left: 10%">
-                Password:
-              </h3>
-              <input
-                type="password"
-                placeholder="Password"
-                name="password"
-                required
-                value="{{ detail.password }}"
-              />
-
-              <button
-                type="submit"
-                class="btn btn-primary btn-xl rounded-pill mt-5"
-                style="background-color: black"
-              >
-                LOGIN
-              </button>
-              <br />
-            </div>
-          </div>
-        </form>
-      </div>
+    <div class="container" style="
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    min-height: calc(80vh - 200px); 
+    align-items: center;
+    background-color: #f8f9fa;">
+      <div class="masthead-content" style="background-color: white;
+      display: grid;
+      place-items: center;
+      margin-top: 70px;
+      margin-bottom: 30px;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      width: 300px;
+      text-align: center;
+      height: auto;
+    ">
+      <h1 style="margin-bottom: 7rem  ;align-content: center;font-size:270% ;">WELCOME</h1>
+  
+      <form action="homepage/login.html" method="POST">
+        <div class="login" id="here" style=" display: flex;justify-content: center;align-items: center;">
+          <script>
+            $(document).ready(function () {
+              setInterval(function () {
+                $("#here").load(window.location.href + " #here");
+              }, 1000);
+            });
+          </script>
+  
+          {% csrf_token %}
+          <h3 style="margin-left: 9rem;font-size: 1.2rem;margin-right: 1.5rem;">Email:</h3>
+          <input style="background-color:#f4f4f5; width: 20rem; height: 3.5rem;margin-right: 6rem;"  type="text" placeholder="Email" name="email" required value="{{ detail.email }}" />
+  
+          <h3 style="margin-left: 9rem;font-size: 1.2rem;margin-right: 1.5rem;">Password:</h3>
+          <input style="background-color:#f4f4f5 ; width: 20rem;height: 3.5rem ;margin-right: 6rem" type="password" placeholder="Password" name="password" required value="{{ detail.password }}" />
+  
+          <button style="margin-top: 2rem;margin-right: 2.5rem;" type="submit">LOGIN</button>
+        </div>
+      </form>
     </div>
+    </div>
+    
   </header>
+  <div class="top-bar" style="width: 100%;height: 80px;background-color: #343a40 ;margin-bottom:0;margin-top:59.95px ; color:white; display:flex;justify-content: center;align-items: center;font-size: large;">
+    <!-- <span class="brand-name">HEAR2SEE</span> -->
+  </div>
 
   <script>
     function SendPostRequestHome(event) {
@@ -91,3 +83,7 @@
   
   {% endblock %}
 </body>
+
+
+
+
