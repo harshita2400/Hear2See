@@ -2,88 +2,62 @@
 
 {% block content %}
 
-	<body onmousedown = "SendPostRequestInbox(event)">
-		<nav class="navbar navbar-dark navbar-expand-lg fixed-top bg-dark navbar-custom">
-			<div class="container"><a class="navbar-brand" style="font-size:150%;">DRISHT-E</a>
-				
-			</div>
-		</nav>
-		<header class="masthead text-left text-white">
-			<div class="masthead-content">
-				<div class="container" >
-					<center>
-						<h4 class="masthead-heading mb-0" style = "margin-top: -100px; font-size: 60px;color:black;">INBOX PAGE</h4>			
-						<br>
-							<h2> How would you like to proceed? <h2>
-					</center>
-					
-				<table align="center" >
-					<tr>
-						<td>
-							
-								<input href="compose.html"class="btn btn-primary btn-xl rounded-pill mt-5"
-								class="button" role="button"
-								style="width: 250px; background-color: black;" type="submit" 
-								value="UNREAD"  style="background-color: black;">
-						</td>
-					</tr>
-						
-					<tr>
-						<td>
-							
-								<input href="inbox.html"class="btn btn-primary btn-xl rounded-pill mt-5"
-								 role="button"
-								 style="width: 250px; background-color: black;" type="submit" 
-								value="SEARCH" >
-						</td>
+<body onmousedown="SendPostRequestInbox(event)" style="margin: 0; font-family: Arial, sans-serif; background-color: #e5eaed; height: 100vh; overflow: hidden;">
 
-					</tr>
-						
-					<tr>
-						<td>
-							
-								<input href="options.html"class="btn btn-primary btn-xl rounded-pill mt-5" 
-								role="button" 
-								style="width: 250px; background-color: black;" type="submit"  
-								value="BACK">
-						</td>
-					</tr>
-						
-					
-					<tr>
-						<td>
-							
-								<input href="login.html"class="btn btn-primary btn-xl rounded-pill mt-5"
-								role="button"
-								style="width: 250px; background-color: black;"  type="submit" 
-								value="LOGOUT">
-						</td>
-					</tr>
-						
+    <!-- Navbar -->
+    <nav style="height: 60px; background-color: #2f3a40; color: white; display: flex; align-items: center; padding-left: 20px;">
+        <span style="font-size: 20px; font-weight: bold;">DRISHT-E</span>
+    </nav>
 
-				</table>
-		
-				</div>
-			</div>
+    <!-- Page Wrapper -->
+    <div style="display: flex; justify-content: center; align-items: center; height: calc(100vh - 60px);">
 
-		</header>
-		
-	<script>
-	function SendPostRequestInbox(event){
-		$.ajax({
-        url: "{% url 'homepage:inbox' %}",
-        method: 'POST',
-        data: { 'csrfmiddlewaretoken': '{{ csrf_token }}'},
-        success: function (data) {
-			if(data.result == 'success'){
-				window.location = "{% url 'homepage:options' %}";
-			}
-			else if(data.result == 'logout'){
-				window.location = "{% url 'homepage:login' %}";
-			}
+        <!-- Card Box -->
+        <div style="background-color: white; padding: 40px 60px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); text-align: center;">
+
+            <!-- Title -->
+            <h1 style="font-size: 32px; font-weight: bold; color: black; margin-bottom: 10px;">INBOX PAGE</h1>
+            <p style="font-size: 16px; color: #555; margin-bottom: 30px;">How do you want to proceed?</p>
+
+            <!-- Buttons -->
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+                <input type="submit" value="UNREAD"
+                    onclick="location.href='compose.html'"
+                    style="width: 200px; padding: 12px; background-color: black; color: white; border: none; border-radius: 30px; font-size: 16px; cursor: pointer;">
+
+                <input type="submit" value="SEARCH"
+                    onclick="location.href='inbox.html'"
+                    style="width: 200px; padding: 12px; background-color: black; color: white; border: none; border-radius: 30px; font-size: 16px; cursor: pointer;">
+
+                <input type="submit" value="BACK"
+                    onclick="location.href='options.html'"
+                    style="width: 200px; padding: 12px; background-color: black; color: white; border: none; border-radius: 30px; font-size: 16px; cursor: pointer;">
+
+                <input type="submit" value="LOGOUT"
+                    onclick="location.href='login.html'"
+                    style="width: 200px; padding: 12px; background-color: black; color: white; border: none; border-radius: 30px; font-size: 16px; cursor: pointer;">
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function SendPostRequestInbox(event) {
+            $.ajax({
+                url: "{% url 'homepage:inbox' %}",
+                method: 'POST',
+                data: { 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+                success: function (data) {
+                    if (data.result == 'success') {
+                        window.location = "{% url 'homepage:options' %}";
+                    } else if (data.result == 'logout') {
+                        window.location = "{% url 'homepage:login' %}";
+                    }
+                }
+            });
         }
-    });
-	}
-	</script>
+    </script>
+
+</body>
 
 {% endblock %}

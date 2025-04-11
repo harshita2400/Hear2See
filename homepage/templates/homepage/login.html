@@ -1,5 +1,5 @@
 {% extends 'base_layout.html' %} {% block content %}
-<body style="margin:0; background-color: #e2e6ea"
+<body style="margin:0; background-color: #f8f9fa"
   onmousedown="SendPostRequestHome(event)"
  
 >
@@ -18,7 +18,7 @@
     justify-content: center;
     min-height: calc(80vh - 200px); 
     align-items: center;
-    background-color: #e2e6ea;">
+    background-color: #f8f9fa;">
       <div class="masthead-content" style="background-color: white;
       display: grid;
       place-items: center;
@@ -45,10 +45,10 @@
   
           {% csrf_token %}
           <h3 style="margin-left: 9rem;font-size: 1.2rem;margin-right: 1.5rem;">Email:</h3>
-          <input style="background-color:#e2e6ea; width: 20rem; height: 3.5rem;margin-right: 6rem;"  type="text" placeholder="Email" name="email" required value="{{ detail.email }}" />
+          <input style="background-color:#f4f4f5; width: 20rem; height: 3.5rem;margin-right: 6rem;"  type="text" placeholder="Email" name="email" required value="{{ detail.email }}" />
   
           <h3 style="margin-left: 9rem;font-size: 1.2rem;margin-right: 1.5rem;">Password:</h3>
-          <input style="background-color:#e2e6ea ; width: 20rem;height: 3.5rem ;margin-right: 6rem" type="password" placeholder="Password" name="password" required value="{{ detail.password }}" />
+          <input style="background-color:#f4f4f5 ; width: 20rem;height: 3.5rem ;margin-right: 6rem" type="password" placeholder="Password" name="password" required value="{{ detail.password }}" />
   
           <button style="margin-top: 2rem;margin-right: 2.5rem;" type="submit">LOGIN</button>
         </div>
